@@ -1,0 +1,287 @@
+CSCE 4550 Introduction to Computer Security Fall 2018
+1
+Project 1
+Due: 11:59 PM on Monday, October 15, 2018
+PROGRAM DESCRIPTION:
+For this project, you will implement a simple “secure” system in C++ following the BellLaPadula
+(BLP) security rules – simple security and the *-property – in addition to following
+strong tranquility. Your system will have subjects and objects. Each object has a name and an
+integer value (initially 0) while each subject has a name and an integer variable called temp that
+records the value it most recently read (also initially 0). You will implement a Subject as a
+class as well as an Object as a class. Subjects can perform READ and WRITE operations on
+objects. For a READ, the subject reads the current value of the object and saves that value into
+its temp variable (a subsequent READ will smash, or change, it). When a subject does a
+WRITE, the object’s value is updated.
+The input to your system is a file of commands. Legal commands are of the form/syntax:
+ADDSUB subject_name security_level
+ADDOBJ object_name security_level
+READ subject_name object_name
+WRITE subject_name object_name value
+The subject and object names are strings while the value is an integer (also, the temp variable is
+an integer). Except for requiring a valid syntax, ADDSUB and ADDOBJ are not subject to the
+security rules (i.e., any syntactically valid ADDSUB and ADDOBJ should be passed to the
+reference monitor to add the subject and object, respectively.
+You will read successive lines from the file and parse each into an instruction object (perhaps a
+struct or a class). Commands are not case-sensitive (even subject and object names).
+Arbitrary whitespace is allowed in commands, though you may assume that each command is on
+one line. You must perform error checking for any file operations.
+Be sure to deal with the possibility of errors in the instructions (i.e., neither ADDSUB,
+ADDOBJ, READ, or WRITE, wrong number/type of arguments, etc.). For syntactically illegal
+instructions, you will indicate that it is a Bad Instruction and print out the illegal
+command (but you will not pass it to the ReferenceMonitor described below).
+Now, let’s add security to our system. Start by giving both subjects and objects associated
+security labels (i.e., levels). These labels are maintained by a ReferenceMonitor class
+object and cannot be changed after they are created (i.e., they have strong tranquility).
+Essentially, the reference monitor will manage the two mappings from the subject and object
+names to their security labels.
+In the secure system, whenever a subject requests to perform a syntactically legal action (i.e.,
+READ or WRITE), the parsed instruction object is submitted to the reference monitor, which
+decides whether to perform the action or not based on the BLP properties (i.e., the simple
+security and the *-property). If the instruction is both syntactically legal and is allowed by the
+BLP rules, the reference monitor indicates that access is granted and then calls the applicable
+CSCE 4550 Introduction to Computer Security Fall 2018
+2
+objects (i.e., the Subject object and/or Object object) to perform the appropriate action.
+Otherwise, the reference monitor indicates that access is denied and prints the instruction object,
+but no objects are accessed. In the secure system, we also extend the notion of when an
+instruction is syntactically illegal in such that an instruction that references a subject or object
+that does not exist is a bad instruction (though this can be passed to the reference monitor).
+All subject and object accesses MUST go through the reference monitor. If the subject is
+performing a READ, it then stores this value (from the object) to its temp variable. Think of the
+reference monitor as a firewall around the subjects and objects. The subjects and objects
+themselves don’t care about labels or security. They just do what the reference monitor tells them
+(through simple accesses).
+The main function (contained in BLPSecure.cpp) manages the reference monitor and also
+serves as the command interpreter. It reads successive instructions from the instruction list,
+parses them, and submits syntactically legal commands to the reference monitor.
+Your task is to implement this secure system, subject to the following constraints:
+• The SecurityLevel should be defined as LOW, MEDIUM, and HIGH with a
+“dominates” relation. You may assume that levels are linearly ordered. That is, it is a
+total order so you do not need to worry about categories.
+• When you parse a command from the input file, for any syntactically legal command you
+will create an instruction object with fields representing the instruction type (i.e.,
+ADDSUB, ADDOBJ, READ or WRITE), the subject’s name, the object’s name, and
+value, if any. It is this instruction object that you pass to the ReferenceMonitor. For
+an ill-formed instruction, you can simply indicate that it is a bad instruction and print out
+the command.
+To see how your system is behaving, you will write a printState method in the
+ReferenceMonitor class that prints out the names and current values of all the subjects and
+objects after every ten actions (i.e., ADDSUB, ADDOBJ, READ, WRITE, or bad instruction)
+are processed and at the end, once all instructions have been processed. Note, however, that this
+kind of information is not something that typically a secure system would do, but it is being
+asked for here in the context of the assignment.
+The main function should perform the following tasks:
+• Read successive instructions from the input file and execute them, following the BellLaPadula
+constraints on reading and writing. You should have methods addSubject,
+addObject, executeRead and executeWrite within your
+ReferenceMonitor class that check access requests and perform the appropriate
+action (if any) on the state, following the instruction semantics outlined above.
+To ensure that your C++ code is compiled correctly, you will need to create a simple
+Makefile. This allows our scripts to just run make to compile your code with the right
+libraries and flags.
+Your program will be tested using a suite of 3 – 5 input files on the CSE machines, some of
+which will exercise your program’s ability to correctly execute commands and some of which
+will test your program’s ability to catch error conditions. You should not “hard-code” any items
+CSCE 4550 Introduction to Computer Security Fall 2018
+3
+in your system. Be sure that you thoroughly exercise your program’s capabilities on a wide range
+of test suites.
+REQUIREMENTS:
+• Your code should be well documented in terms of comments. For example, good
+comments in general consist of a header (with your name, course section, date, and a
+brief description), comments for each variable, and commented “blocks” of code.
+• Your program will be graded largely on whether it works correctly on the CSE machines
+(e.g., cse01, cse02, …, cse06), so you should make sure that your program compiles
+and runs on a CSE machine.
+• Please pay attention to the SAMPLE OUTPUT for how this program is expected to
+work. If you have any questions about this, please contact your instructor, TA, or IA
+assigned to this course to ensure you understand these directions.
+• This is an individual programming assignment that must be the sole work of the
+individual student. Any instance of academic dishonesty will result in a grade of “F” for
+the course, along with a report filed into the Academic Integrity Database.
+SAMPLE OUTPUT (user input shown in bold):
+Although I have used 7 alphanumeric characters for both subjects and objects in my instruction
+list for this sample output, there is no restriction to the length of the subject or object names.
+$ more instrList
+addsub kel0004 LOW
+addsub jms0381 MEDIUM
+addsub sam0039 HIGH
+addobj file001 MEDIUM
+addobj file002 LOW
+write kel0004 file002 20
+write jms0381 file001 10
+read sam0039 file001
+read kel0004 file001
+read kel0004 file002
+addobj file003 HIGH
+write jms0381 file002
+read sam0039
+write jms0381 file001 40 80
+read krt1039 file003 50
+write kel0004 file001 10
+addsub sra0002 LOW
+read sra0002 file003
+addsub krt0084 MEDIUM
+addsub liz0028 HIGH
+write krt1039 file004 40
+write liz0028 file001 20
+write liz0028 file003 30
+read sra0002 file002
+addobj file004 HIGH
+addobj file005 LOW
+read liz0028 file005
+write sra0002 file005 50
+addobj file006 MEDIUM
+CSCE 4550 Introduction to Computer Security Fall 2018
+4
+write jms0381 file006 30
+write kel0004 file006 20
+read liz0028 file003
+read krt1039 file004
+read jms0381 file004
+read krt0084 file001
+read krt0084 file005
+write sam0039 file006 90
+write sam0039 file005 x
+write liz0028 file004 60
+write liz0028 file005 60
+read sra0002 file007
+exec adm0831 file004
+read sam0039 file006
+read jms0381 file005
+write sra0002 file004 70
+$ make clean
+rm *.o blpsecure
+$ make
+g++ -c -g -std=c++0x -Wall -c -o Subject.o Subject.cpp
+g++ -c -g -std=c++0x -Wall -c -o Object.o Object.cpp
+g++ -c -g -std=c++0x -Wall BLPSecure.cpp
+g++ -c -g -std=c++0x -Wall -c -o ReferenceMonitor.o ReferenceMonitor.cpp
+g++ -o blpsecure Subject.o Object.o BLPSecure.o ReferenceMonitor.o
+$ ./blpsecure
+usage: blpsecure instructionList
+$ ./blpsecure badfile
+Unable to open badfile file. Terminating...
+$ ./blpsecure instrList
+Subject Added : addsub kel0004 LOW
+Subject Added : addsub jms0381 MEDIUM
+Subject Added : addsub sam0039 HIGH
+Object Added : addobj file001 MEDIUM
+Object Added : addobj file002 LOW
+Access Granted : kel0004 writes value 20 to file002
+Access Granted : jms0381 writes value 10 to file001
+Access Granted : sam0039 reads file001
+Access Denied : read kel0004 file001
+Access Granted : kel0004 reads file002
++---current state---+
+|-subject-|---temp--|
+| kel0004 | 20 |
+| jms0381 | 0 |
+| sam0039 | 10 |
+|--object-|--value--|
+| file001 | 10 |
+| file002 | 20 |
++-------------------+
+Object Added : addobj file003 HIGH
+Bad Instruction : write jms0381 file002
+Bad Instruction : read sam0039
+Bad Instruction : write jms0381 file001 40 80
+Bad Instruction : read krt1039 file003 50
+Access Granted : kel0004 writes value 10 to file001
+Subject Added : addsub sra0002 LOW
+Access Denied : read sra0002 file003
+Subject Added : addsub krt0084 MEDIUM
+CSCE 4550 Introduction to Computer Security Fall 2018
+5
+Subject Added : addsub liz0028 HIGH
++---current state---+
+|-subject-|---temp--|
+| kel0004 | 20 |
+| jms0381 | 0 |
+| sam0039 | 10 |
+| sra0002 | 0 |
+| krt0084 | 0 |
+| liz0028 | 0 |
+|--object-|--value--|
+| file001 | 10 |
+| file002 | 20 |
+| file003 | 0 |
++-------------------+
+Bad Instruction : write krt1039 file004 40
+Access Denied : write liz0028 file001 20
+Access Granted : liz0028 writes value 30 to file003
+Access Granted : sra0002 reads file002
+Object Added : addobj file004 HIGH
+Object Added : addobj file005 LOW
+Access Granted : liz0028 reads file005
+Access Granted : sra0002 writes value 50 to file005
+Object Added : addobj file006 MEDIUM
+Access Granted : jms0381 writes value 30 to file006
++---current state---+
+|-subject-|---temp--|
+| kel0004 | 20 |
+| jms0381 | 0 |
+| sam0039 | 10 |
+| sra0002 | 20 |
+| krt0084 | 0 |
+| liz0028 | 0 |
+|--object-|--value--|
+| file001 | 10 |
+| file002 | 20 |
+| file003 | 30 |
+| file004 | 0 |
+| file005 | 50 |
+| file006 | 30 |
++-------------------+
+Access Granted : kel0004 writes value 20 to file006
+Access Granted : liz0028 reads file003
+Bad Instruction : read krt1039 file004
+Access Denied : read jms0381 file004
+Access Granted : krt0084 reads file001
+Access Granted : krt0084 reads file005
+Access Denied : write sam0039 file006 90
+Bad Instruction : write sam0039 file005 x
+Access Granted : liz0028 writes value 60 to file004
+Access Denied : write liz0028 file005 60
++---current state---+
+|-subject-|---temp--|
+| kel0004 | 20 |
+| jms0381 | 0 |
+| sam0039 | 10 |
+| sra0002 | 20 |
+| krt0084 | 50 |
+CSCE 4550 Introduction to Computer Security Fall 2018
+6
+| liz0028 | 30 |
+|--object-|--value--|
+| file001 | 10 |
+| file002 | 20 |
+| file003 | 30 |
+| file004 | 60 |
+| file005 | 50 |
+| file006 | 20 |
++-------------------+
+Bad Instruction : read sra0002 file007
+Bad Instruction : exec adm0831 file004
+Access Granted : sam0039 reads file006
+Access Granted : jms0381 reads file005
+Access Granted : sra0002 writes value 70 to file004
++----final state----+
+|-subject-|---temp--|
+| kel0004 | 20 |
+| jms0381 | 50 |
+| sam0039 | 20 |
+| sra0002 | 20 |
+| krt0084 | 50 |
+| liz0028 | 30 |
+|--object-|--value--|
+| file001 | 10 |
+| file002 | 20 |
+| file003 | 30 |
+| file004 | 70 |
+| file005 | 50 |
+| file006 | 20 |
++-------------------+
+SUBMISSION:
+• You will electronically submit all of your source code files (i.e., the .cpp and .h files)
+plus the Makefile to the Project 1 dropbox in Canvas by the due date.

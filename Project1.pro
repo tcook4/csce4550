@@ -5,12 +5,17 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     subject.cpp \
-    object.cpp
+    object.cpp \
+    referencemonitor.cpp \
+    instruction.cpp
 
 DISTFILES += \
-    requirements
+    requirements \
+    instructions
 
 HEADERS += \
     subject.h \
-    object.h
+    object.h \
+    referencemonitor.h \
+    instruction.h
 

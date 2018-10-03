@@ -2,6 +2,8 @@
 #define INSTRUCTION_H
 
 #include <iostream>
+#include <sstream>
+using namespace std;
 
 
 class Instruction
@@ -9,6 +11,8 @@ class Instruction
 public:
     Instruction();
     void clear();
+    void load(string commandStr);
+    void to_upper(string &str);
 
 private:
     string command; // Command word to execute

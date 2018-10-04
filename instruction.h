@@ -11,14 +11,15 @@ class Instruction
 public:
     Instruction();
     void clear();
-    void load(string commandStr);
+    bool load(string commandStr);
     void to_upper(string &str);
 
 private:
     string command; // Command word to execute
     string object_name; // Object name of a command
     string subject_name; // Subject Name of a command
-    int security_level; // Security level of an operation
+    string security_level; // Security level of an operation
+    int value; // Value to write to an object
 };
 
 #endif // INSTRUCTION_H

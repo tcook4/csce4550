@@ -5,7 +5,8 @@ Instruction::Instruction()
     command = "";
     object_name = "";
     subject_name = "";
-    security_level = 0;
+    security_level = "";
+    value = 0;
 }
 
 void Instruction::clear()
@@ -13,49 +14,65 @@ void Instruction::clear()
     command = "";
     object_name = "";
     subject_name = "";
-    security_level = 0;
+    security_level = "";
+    value = 0;
 }
 
-void Instruction::load(string commandStr)
+bool Instruction::load(string commandStr)
 {
-    string operation; // The operation we're performing
-    string subject; // The subject of the operation
-    string object; // The object of the operation
-    string value; // the value of the write operation
-
     stringstream ss; // Stringstream used to separate values
+
+    cout << "Command str is : " << commandStr << endl;
 
     // Load the stream with the line read from input
     ss << commandStr;
-    ss >> operation;
+    ss >> command;
 
     // Convert to uppercase
-    //to_upper(operation);
+    to_upper(command
+             );
 
-    if (operation.compare("addsub"))
+    // Check and perform command as given
+    // Add Subject
+    if (command.compare("addsub"))
     {
-        cout << "In addsub\n";
-    }
-    else if (operation.compare("addobj"))
-    {
-        cout << "In addobj\n";
+        ss >> subject_name >> security_level;
 
+        // Verify command is valid
+
+
+
+
+        cout << "Subject Added: " << command << " " << subject_name << " " << security_level << endl;
     }
-    else if (operation.compare("read"))
+
+    // Add Object
+    else if (command.compare("addobj"))
+    {
+        ss >> object_name >> security_level;
+        cout << "Object Added: " << command << " " << object_name << " " << security_level << endl;
+    }
+
+    // Read an object
+    else if (command.compare("read"))
     {
         cout << "In read\n";
+        ss >> subject_name >> object_name;
+        cout << "Object Added: " << command << " " << object_name << " " << security_level << endl;
     }
-    else if (operation.compare("write"))
+
+    // Write to an object
+    else if (command.compare("write"))
     {
-        cout << "In write\n";
-        ss >> subject >> object >> value;
-        cout << "For write, got operation:" << operation << " subject " << subject << " object " << object << " and value " << value << endl;
+        ss >> subject_name >> object_name >> value;
     }
     else
     {
-        cout << "Error: Bad Command\n";
+        cout << "Bad Command: " << commandStr << endl;
+        clear();
+        return false;
     }
-
+    return true;
 }
 
 // Convert string to uppercase

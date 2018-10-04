@@ -47,9 +47,6 @@ int main(int argc, char *argv[])
         command.load(line);
 
 
-
-
-
         // Increment display counter and display if we've completed 10 instructions
         status_counter++;
         if (status_counter == 10)
@@ -58,8 +55,6 @@ int main(int argc, char *argv[])
             status_counter = 0;
         }
     }
-
-
 
 
 

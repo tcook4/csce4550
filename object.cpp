@@ -6,6 +6,12 @@ Object::Object()
     value = 0;
 }
 
+Object::Object(string str, security_level level)
+{
+    name = str;
+    sec_level = level;
+}
+
 int Object::get_value()
 {
     return value;

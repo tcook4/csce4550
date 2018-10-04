@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "subject.h"
 #include "instruction.h"
 #include "referencemonitor.h"
@@ -21,6 +22,9 @@ int main(int argc, char *argv[])
     string line; // Line of input
     Instruction command;
     int status_counter = 0; // Used to track output lines and print status
+    ReferenceMonitor monitor; // Monitor object which checks access and executes commands
+    vector <Subject> subjects; // Collection of subjects loaded in the system
+    vector <Object> objects; // Collection of objects loaded in the system
 
     // Verify we got a parameter to check
     if (argc != 2)
@@ -44,7 +48,10 @@ int main(int argc, char *argv[])
     while (getline(instructions, line))
     {
         // Pass instruction to instruction object
-        command.load(line);
+        if (command.load(line))
+        {
+            monitor.evaluate(command, subjects, objects);
+        }
 
 
         // Increment display counter and display if we've completed 10 instructions

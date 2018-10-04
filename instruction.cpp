@@ -5,7 +5,7 @@ Instruction::Instruction()
     command = "";
     object_name = "";
     subject_name = "";
-    security_level = "";
+    security_str = "";
     value = 0;
 }
 
@@ -14,7 +14,7 @@ void Instruction::clear()
     command = "";
     object_name = "";
     subject_name = "";
-    security_level = "";
+    security_str = "";
     value = 0;
 }
 
@@ -33,33 +33,33 @@ bool Instruction::load(string commandStr)
     // Add Subject
     if (command == "ADDSUB")
     {
-        ss >> subject_name >> security_level;
-        to_upper(security_level);
+        ss >> subject_name >> security_str;
+        to_upper(security_str);
 
         // Verify security level valid and stream is empty
-        if ((!(security_level == "LOW" || security_level == "MEDIUM" || security_level == "HIGH")) || (!ss.eof()))
+        if ((!(security_str == "LOW" || security_str == "MEDIUM" || security_str == "HIGH")) || (!ss.eof()))
         {
             cout << "Bad Command: " << commandStr << endl;
             return false;
         }
 
-        cout << "Subject Added: " << command << " " << subject_name << " " << security_level << endl;
+        cout << "Subject Added: " << command << " " << subject_name << " " << security_str << endl;
     }
 
     // Add Object
     else if (command == "ADDOBJ")
     {
-        ss >> object_name >> security_level;
-        to_upper(security_level);
+        ss >> object_name >> security_str;
+        to_upper(security_str);
 
         // Verify security level valid and stream is empty
-        if ((!(security_level == "LOW" || security_level == "MEDIUM" || security_level == "HIGH")) || (!ss.eof()))
+        if ((!(security_str == "LOW" || security_str == "MEDIUM" || security_str == "HIGH")) || (!ss.eof()))
         {
             cout << "Bad Command: " << commandStr << endl;
             return false;
         }
 
-        cout << "Object Added: " << command << " " << object_name << " " << security_level << endl;
+        cout << "Object Added: " << command << " " << object_name << " " << security_str << endl;
     }
 
     // Read an object
@@ -112,5 +112,44 @@ void Instruction::to_upper(string &str)
             str[i]-=32;
         }
     }
+}
+
+// Set the security enum based on the string representation loaded
+void Instruction::set_security(string sec)
+{
+    if (sec == "HIGH")
+    {
+        sec_level = HIGH;
+    }
+    else if (sec == "MEDIUM")
+    {
+        sec_level = MEDIUM;
+    }
+    else if (sec == "LOW")
+    {
+        sec_level = LOW;
+    }
+}
+
+// Getters for reference monitor usage
+string Instruction::getCommand() const
+{
+    return command;
+}
+
+string Instruction::getObject_name() const
+{
+    return object_name;
+}
+
+string Instruction::getSubject_name() const
+{
+    return subject_name;
+}
+
+
+security_level Instruction::getSec_level() const
+{
+    return sec_level;
 }
 

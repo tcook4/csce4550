@@ -3,11 +3,12 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-SOURCES += main.cpp \
+SOURCES += \
     subject.cpp \
     object.cpp \
     referencemonitor.cpp \
-    instruction.cpp
+    instruction.cpp \
+    BLPSecure.cpp
 
 DISTFILES += \
     requirements \
@@ -17,5 +18,6 @@ HEADERS += \
     subject.h \
     object.h \
     referencemonitor.h \
-    instruction.h
+    instruction.h \
+    security_levels.h
 

@@ -14,6 +14,10 @@ public:
     void READ(Object &obj);
     void WRITE(Object &obj, int value);
 
+    string getName() const;
+    int getTemp() const;
+    security_level getSec_level() const;
+
 private:
     string name;
     int temp;

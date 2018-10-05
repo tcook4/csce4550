@@ -3,7 +3,7 @@
 
 enum security_level
 {
-    HIGH, MEDIUM, LOW
+    HIGH, MEDIUM, LOW, UNAUTHENTICATED
 };
 
 

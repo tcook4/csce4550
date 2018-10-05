@@ -11,10 +11,10 @@ class ReferenceMonitor
 {
 public:
     ReferenceMonitor();
-    void add_object();
-    void add_subject();
-    void execute_read();
-    void execute_write();
+    void add_object(Instruction command, vector<Object> &objects);
+    void add_subject(Instruction command, vector<Subject> &subjects);
+    void execute_read(Instruction command, vector<Subject> &subjects, vector<Object> &objects);
+    void execute_write(Instruction command, vector<Subject> &subjects, vector<Object> &objects);
     void evaluate(Instruction command, vector<Subject> &subjects, vector<Object> &objects);
 };
 

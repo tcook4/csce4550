@@ -14,6 +14,10 @@ public:
     int get_value();
     void set_value(int val);
 
+    string getName() const;
+    int getValue() const;
+    security_level getSec_level() const;
+
 private:
     string name;
     int value;

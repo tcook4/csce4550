@@ -14,7 +14,7 @@
 
 using namespace std;
 
-void print_status();
+void print_status(vector<Subject> &subjects, vector<Object> &objects);
 
 int main(int argc, char *argv[])
 {
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
         status_counter++;
         if (status_counter == 10)
         {
-            print_status();
+            print_status(subjects, objects);
             status_counter = 0;
         }
     }
@@ -71,7 +71,18 @@ int main(int argc, char *argv[])
 }
 
 // Print the stack of objects
-void print_status()
+void print_status(vector<Subject> &subjects, vector<Object> &objects)
 {
-    cout << "\nI am the status message!\n\n";
+    cout << "+ *** Current State *** +" << endl;
+    cout << "|---Subject------Temp---|" << endl;
+    for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); ++it)
+    {
+        cout << "| " << it->getName() << " | " << it->getTemp() << " |" << endl;
+    }
+
+    cout << "|---Object-------Temp---|" << endl;
+    for (vector<Object>::iterator it = objects.begin(); it != objects.end(); ++it)
+    {
+        cout << "| " << it->getName() << " | "  << it->getValue() << " |" << endl;
+    }
 }

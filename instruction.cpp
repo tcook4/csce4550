@@ -6,6 +6,7 @@ Instruction::Instruction()
     object_name = "";
     subject_name = "";
     security_str = "";
+    command_ref = "";
     value = 0;
 }
 
@@ -15,12 +16,14 @@ void Instruction::clear()
     object_name = "";
     subject_name = "";
     security_str = "";
+    command_ref = "";
     value = 0;
 }
 
 bool Instruction::load(string commandStr)
 {
     stringstream ss; // Stringstream used to separate values
+    clear(); // Clear any previous values
 
     // Load the stream with the line read from input
     ss << commandStr;
@@ -43,7 +46,8 @@ bool Instruction::load(string commandStr)
             return false;
         }
 
-        cout << "Subject Added: " << command << " " << subject_name << " " << security_str << endl;
+        // Store the command for printing by reference monitor
+        command_ref = command + " " + subject_name + " " + security_str;
     }
 
     // Add Object
@@ -59,11 +63,12 @@ bool Instruction::load(string commandStr)
             return false;
         }
 
-        cout << "Object Added: " << command << " " << object_name << " " << security_str << endl;
+        // Store the command for printing by reference monitor
+        command_ref = command + " " + object_name + " " + security_str;
     }
 
     // Read an object
-    else if (command == "read")
+    else if (command == "READ")
     {
         ss >> subject_name >> object_name;
 
@@ -74,13 +79,16 @@ bool Instruction::load(string commandStr)
             return false;
         }
 
-        cout << "Read: " << command << " " << subject_name << " " << object_name << endl;
+        // Store the command for printing by reference monitor
+        command_ref = command + " " + subject_name + " " + object_name;
     }
 
     // Write to an object
-    else if (command == "write")
+    else if (command == "WRITE")
     {
         ss >> subject_name >> object_name >> value;
+
+        // TODO: CHeck that value is an int
 
         // Make sure nothing left in stream
         if (!ss.eof())
@@ -89,7 +97,8 @@ bool Instruction::load(string commandStr)
             return false;
         }
 
-        cout << "Write: " << command << " " << subject_name << " " << object_name << endl;
+        // Store the command for printing by reference monitor
+        command_ref = command + " " + subject_name + " " + object_name + " " + to_string(value);
     }
 
     // If we get here, we have a bad command
@@ -147,9 +156,13 @@ string Instruction::getSubject_name() const
     return subject_name;
 }
 
-
 security_level Instruction::getSec_level() const
 {
     return sec_level;
+}
+
+string Instruction::getCommand_ref() const
+{
+    return command_ref;
 }
 

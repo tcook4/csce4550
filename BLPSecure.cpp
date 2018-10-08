@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-
     // Open the instructions file for reading
     instructions.open(argv[1], ifstream::in);
     if (!instructions)
@@ -41,8 +40,6 @@ int main(int argc, char *argv[])
         cout << "Error opening file";
         return 1;
     }
-
-
 
     // Process instructions file
     while (getline(instructions, line))
@@ -53,16 +50,15 @@ int main(int argc, char *argv[])
             monitor.evaluate(command, subjects, objects);
         }
 
-
         // Increment display counter and display if we've completed 10 instructions
         status_counter++;
+        cout << "status at " << status_counter << endl;
         if (status_counter == 10)
         {
             print_status(subjects, objects);
             status_counter = 0;
         }
     }
-
 
 
     // Close file when we're done with it

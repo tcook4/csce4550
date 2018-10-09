@@ -16,7 +16,7 @@ Subject::Subject(string str, security_level level)
 
 void Subject::READ(Object &obj)
 {
-    temp = obj.get_value();
+    temp = obj.getValue();
 }
 
 void Subject::WRITE(Object &obj, int value)

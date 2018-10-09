@@ -161,6 +161,11 @@ security_level Instruction::getSec_level() const
     return sec_level;
 }
 
+int Instruction::getValue() const
+{
+    return value;
+}
+
 string Instruction::getCommand_ref() const
 {
     return command_ref;

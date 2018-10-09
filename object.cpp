@@ -14,11 +14,6 @@ Object::Object(string str, security_level level)
     sec_level = level;
 }
 
-int Object::get_value()
-{
-    return value;
-}
-
 void Object::set_value(int val)
 {
     value = val;

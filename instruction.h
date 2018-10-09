@@ -23,6 +23,7 @@ public:
     string getSubject_name() const;
     string getCommand_ref() const;
     security_level getSec_level() const;
+    int getValue() const;
 
 private:
     string command; // Command word to execute

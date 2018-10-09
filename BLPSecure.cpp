@@ -52,7 +52,6 @@ int main(int argc, char *argv[])
 
         // Increment display counter and display if we've completed 10 instructions
         status_counter++;
-        cout << "status at " << status_counter << endl;
         if (status_counter == 10)
         {
             print_status(subjects, objects);

@@ -11,7 +11,6 @@ class Object
 public:
     Object();
     Object(string str, security_level level);
-    int get_value();
     void set_value(int val);
 
     string getName() const;

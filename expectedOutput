@@ -26,8 +26,6 @@ Access Granted : kel0004 writes value 10 to file001
 Subject Added : addsub sra0002 LOW
 Access Denied : read sra0002 file003
 Subject Added : addsub krt0084 MEDIUM
-CSCE 4550 Introduction to Computer Security Fall 2018
-5
 Subject Added : addsub liz0028 HIGH
 +---current state---+
 |-subject-|---temp--|
@@ -85,8 +83,6 @@ Access Denied : write liz0028 file005 60
 | sam0039 | 10 |
 | sra0002 | 20 |
 | krt0084 | 50 |
-CSCE 4550 Introduction to Computer Security Fall 2018
-6
 | liz0028 | 30 |
 |--object-|--value--|
 | file001 | 10 |

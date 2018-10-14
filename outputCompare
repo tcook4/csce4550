@@ -18,8 +18,8 @@ Access Granted : READ kel0004 file002
 | file002 | 20 |
 +-----------------------|
 Object Added : ADDOBJ file003 HIGH
-Access Denied : WRITE jms0381 file002 0
-Access Denied : READ sam0039
+Bad Command: write jms0381 file002
+Bad Command: read sam0039
 Bad Command: write jms0381 file001 40 80
 Bad Command: read krt1039 file003 50
 Access Granted : kel0004 writes 10 to file001

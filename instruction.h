@@ -11,7 +11,6 @@ class Instruction
 {
 public:
     Instruction();
-
     void clear();
     bool load(string commandStr);
     void to_upper(string &str);

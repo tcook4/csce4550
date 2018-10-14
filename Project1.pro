@@ -12,7 +12,10 @@ SOURCES += \
 
 DISTFILES += \
     requirements \
-    instructions
+    instructions \
+    instList \
+    expectedOutput \
+    outputCompare
 
 HEADERS += \
     subject.h \

@@ -22,12 +22,12 @@ void ReferenceMonitor::add_object(Instruction inst, vector<Object> &objects)
 }
 
 // Execute a read of an object
-// For BLPD, no read up is enforced
+// For BLPD, no read up is enforced - subject must be higher than object
 void ReferenceMonitor::execute_read(Instruction inst, vector<Subject> &subjects, vector<Object> &objects)
 {
     // Storage for applicable objects
-    Subject *sub;
-    Object *obj;
+    Subject *sub = NULL;
+    Object *obj = NULL;
 
     // Find the subject and object of the operation
     for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); ++it)
@@ -35,6 +35,7 @@ void ReferenceMonitor::execute_read(Instruction inst, vector<Subject> &subjects,
         if (it->getName() == inst.getSubject_name())
         {
             sub = &*it;
+            break;
         }
     }
     for (vector<Object>::iterator it = objects.begin(); it != objects.end(); ++it)
@@ -42,11 +43,19 @@ void ReferenceMonitor::execute_read(Instruction inst, vector<Subject> &subjects,
         if (it->getName() == inst.getObject_name())
         {
             obj = &*it;
+            break;
         }
     }
 
+    // Verify we found subjects and objects to operate on
+    if (sub == NULL || obj == NULL)
+    {
+        cout << "Access Denied : " << inst.getCommand_ref() << endl;
+        return;
+    }
+
     // Determine if our security level allows us to read the object
-    if (obj->getSec_level() <= sub->getSec_level())
+    if (sub->getSec_level() >= obj->getSec_level())
     {
         sub->READ(*obj);
         cout << "Access Granted : " << inst.getCommand_ref() << endl;
@@ -54,6 +63,7 @@ void ReferenceMonitor::execute_read(Instruction inst, vector<Subject> &subjects,
     else
     {
         cout << "Access Denied : " << inst.getCommand_ref() << endl;
+
     }
 }
 
@@ -62,32 +72,39 @@ void ReferenceMonitor::execute_read(Instruction inst, vector<Subject> &subjects,
 void ReferenceMonitor::execute_write(Instruction inst, vector<Subject> &subjects, vector<Object> &objects)
 {
     // Storage for applicable objects
-    Subject *sub;
-    Object *obj;
+    Subject *sub = NULL;
+    Object *obj = NULL;
 
     // Find the subject and object of the operation
-    for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); it++)
+    for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); ++it)
     {
         if (it->getName() == inst.getSubject_name())
         {
             sub = &*it;
+            break;
         }
     }
-
-    for (vector<Object>::iterator it = objects.begin(); it != objects.end(); it++)
+    for (vector<Object>::iterator it = objects.begin(); it != objects.end(); ++it)
     {
         if (it->getName() == inst.getObject_name())
         {
             obj = &*it;
+            break;
         }
     }
 
+    // Verify we found subjects and objects to operate on
+    if (sub == NULL || obj == NULL)
+    {
+        cout << "Access Denied : " << inst.getCommand_ref() << endl;
+        return;
+    }
 
     // Determine if our security level allows us to write to the object
-    if (obj->getSec_level() <= sub->getSec_level())
+    if (sub->getSec_level() <= obj->getSec_level())
     {
         sub->WRITE(*obj, inst.getValue());
-        cout << "Access Granted : " << inst.getCommand_ref() << endl;
+        cout << "Access Granted : " << sub->getName() << " writes " << inst.getValue() << " to " << obj->getName() << endl;
     }
     else
     {

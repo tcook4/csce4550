@@ -26,15 +26,32 @@ int main(int argc, char *argv[])
     vector <Subject> subjects; // Collection of subjects loaded in the system
     vector <Object> objects; // Collection of objects loaded in the system
 
+    int debug = 0;
+    string dbg;
     // Verify we got a parameter to check
     if (argc != 2)
     {
-        cout << "Error: please provide a filename in the syntax ./" << argv[0] << " filename\n";
-        return 1;
+        if (debug)
+        {
+            cout << "Enter a filename: ";
+            cin >> dbg;
+        }
+        else
+        {
+            cout << "Error: please provide a filename in the syntax ./" << argv[0] << " filename\n";
+            return 1;
+        }
     }
 
     // Open the instructions file for reading
-    instructions.open(argv[1], ifstream::in);
+    if (debug)
+    {
+        instructions.open(dbg, ifstream::in);
+    }
+    else
+    {
+        instructions.open(argv[1], ifstream::in);
+    }
     if (!instructions)
     {
         cout << "Error opening file";
@@ -80,4 +97,5 @@ void print_status(vector<Subject> &subjects, vector<Object> &objects)
     {
         cout << "| " << it->getName() << " | "  << it->getValue() << " |" << endl;
     }
+    cout << "+-----------------------|" << endl;
 }

@@ -36,78 +36,109 @@ bool Instruction::load(string commandStr)
     // Add Subject
     if (command == "ADDSUB")
     {
-        ss >> subject_name >> security_str;
-        to_upper(security_str);
+        if (ss >> subject_name >> security_str)
+        {
+            to_upper(security_str);
 
-        // Verify security level valid and stream is empty
-        if ((!(security_str == "LOW" || security_str == "MEDIUM" || security_str == "HIGH")) || (!ss.eof()))
+            // Verify security level valid and stream is empty
+            if ((!(security_str == "LOW" || security_str == "MEDIUM" || security_str == "HIGH")) || (!ss.eof()))
+            {
+                cout << "Bad Command: " << commandStr << endl;
+                return false;
+            }
+
+            // Store the command for printing by reference monitor
+            command_ref = command + " " + subject_name + " " + security_str;
+            set_security(security_str);
+        }
+        else
         {
             cout << "Bad Command: " << commandStr << endl;
             return false;
         }
-
-        // Store the command for printing by reference monitor
-        command_ref = command + " " + subject_name + " " + security_str;
     }
 
     // Add Object
     else if (command == "ADDOBJ")
     {
-        ss >> object_name >> security_str;
-        to_upper(security_str);
+        if (ss >> object_name >> security_str)
+        {
+            to_upper(security_str);
 
-        // Verify security level valid and stream is empty
-        if ((!(security_str == "LOW" || security_str == "MEDIUM" || security_str == "HIGH")) || (!ss.eof()))
+            // Verify security level valid and stream is empty
+            if ((!(security_str == "LOW" || security_str == "MEDIUM" || security_str == "HIGH")) || (!ss.eof()))
+            {
+                cout << "Bad Command: " << commandStr << endl;
+                return false;
+            }
+
+            // Store the command for printing by reference monitor
+            command_ref = command + " " + object_name + " " + security_str;
+            set_security(security_str);
+        }
+        else
         {
             cout << "Bad Command: " << commandStr << endl;
             return false;
         }
-
-        // Store the command for printing by reference monitor
-        command_ref = command + " " + object_name + " " + security_str;
     }
 
     // Read an object
     else if (command == "READ")
     {
-        ss >> subject_name >> object_name;
+        if (ss >> subject_name >> object_name)
+        {
 
-        // Make sure nothing left in stream
-        if (!ss.eof())
+            // Make sure nothing left in stream
+            if (!ss.eof())
+            {
+                cout << "Bad Command: " << commandStr << endl;
+                return false;
+            }
+
+            // Store the command for printing by reference monitor
+            command_ref = command + " " + subject_name + " " + object_name;
+            set_security(security_str);
+        }
+        else
         {
             cout << "Bad Command: " << commandStr << endl;
             return false;
         }
-
-        // Store the command for printing by reference monitor
-        command_ref = command + " " + subject_name + " " + object_name;
     }
 
     // Write to an object
     else if (command == "WRITE")
     {
-        ss >> subject_name >> object_name >> value;
+        if(ss >> subject_name >> object_name >> value)
+        {
+            // Make sure nothing left in stream
+            if (!ss.eof())
+            {
+                cout << "Bad Command: " << commandStr << endl;
+                return false;
+            }
 
-        // TODO: CHeck that value is an int
-
-        // Make sure nothing left in stream
-        if (!ss.eof())
+            // Store the command for printing by reference monitor
+            command_ref = command + " " + subject_name + " " + object_name + " " + to_string(value);
+            set_security(security_str);
+        }
+        else
         {
             cout << "Bad Command: " << commandStr << endl;
             return false;
         }
-
-        // Store the command for printing by reference monitor
-        command_ref = command + " " + subject_name + " " + object_name + " " + to_string(value);
     }
 
-    // If we get here, we have a bad command
+    // If we get here, we have a bad command name
     else
     {
         cout << "Bad Command: " << commandStr << endl;
         clear();
         return false;
     }
+
+    // We have a good command to use
     return true;
 }
 

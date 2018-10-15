@@ -2,7 +2,8 @@
 // Date: 10/15/2018
 // Course: UNT CSCE 4550.001
 // Description: This program is a simple implementation of Bell-LaPadula security model. It takes a file of text commands
-// as input and executes the commands as given.
+// as input, parses the instructions line by line, and if the instruction is valid, passes it to a reference monitor which
+// executes the command. Commands consist of add subject, add object, read, and write.
 
 #include <iostream>
 #include <fstream>
@@ -14,7 +15,7 @@
 
 using namespace std;
 
-void print_status(vector<Subject> &subjects, vector<Object> &objects);
+void print_status(vector<Subject> &subjects, vector<Object> &objects, int final);
 
 int main(int argc, char *argv[])
 {
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
     vector <Subject> subjects;      // Collection of subjects loaded in the system
     vector <Object> objects;        // Collection of objects loaded in the system
 
-    // Verify we got a parameter to check
+    // Verify we got a filename in command line arguments
     if (argc != 2)
     {
         cout << "Error: please provide a filename in the syntax ./" << argv[0] << " filename\n";
@@ -55,8 +56,7 @@ int main(int argc, char *argv[])
         status_counter++;
         if (status_counter == 10)
         {
-            cout << "+ *** Current State *** +" << endl;
-            print_status(subjects, objects);
+            print_status(subjects, objects, 0);
             status_counter = 0;
         }
     }
@@ -65,45 +65,38 @@ int main(int argc, char *argv[])
     instructions.close();
 
     // Print final state before exiting
-    cout << "+ **** Final State **** +" << endl;
-    print_status(subjects, objects);
+    print_status(subjects, objects, 1);
 
     return 0;
 }
 
-// Print the stack of objects
-void print_status(vector<Subject> &subjects, vector<Object> &objects)
+// Print the stack of objects and subjects
+void print_status(vector<Subject> &subjects, vector<Object> &objects, int final)
 {
-    // Widths of our columns for pretty output
-    unsigned int col_one_width = 0;
-    unsigned int col_two_width = 0;
-
-    // Get the longest value for our two columns
-    for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); ++it)
+    // Check if this is our final output
+    if (final)
     {
-        if(it->getName().length() > col_one_width)
-        {
-            col_one_width = it->getName().length();
-        }
+        cout  << "+" << string(4, '*') << "  Final State  " <<  string(4, '*') <<"+" << endl;
     }
-    for (vector<Object>::iterator it = objects.begin(); it != objects.end(); ++it)
+    else
     {
-        if(it->getName().length() > col_one_width)
-        {
-            col_one_width = it->getName().length();
-        }
+        cout  << "+" << string(4, '*') << " Current State " <<  string(4, '*') <<"+" << endl;
     }
 
+    // Print the stack of subjects
     cout << "|---Subject------Temp---|" << endl;
-    for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); ++it)
+    for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); it++)
     {
-        cout << setw(col_one_width) << left << "| " << it->getName() << " | " << it->getTemp() << " |" << endl;
+        cout << left << "| " << it->getName() << " | " << setw(14) ;
+        cout << right << setw(11) << it->getTemp() << " |" << endl;
     }
 
+    // Print the stack of objects
     cout << "|---Object------Value---|" << endl;
-    for (vector<Object>::iterator it = objects.begin(); it != objects.end(); ++it)
+    for (vector<Object>::iterator it = objects.begin(); it != objects.end(); it++)
     {
-        cout << "| " << it->getName() << " | "  << it->getValue() << " |" << endl;
+        cout << left << "| " << it->getName() << " | " << setw(14) ;
+        cout << right << setw(11) << it->getValue() << " |" << endl;
     }
-    cout << "+-----------------------+" << endl;
+    cout << "+" << string(23, '-') << "+" << endl;
 }

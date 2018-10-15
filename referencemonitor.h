@@ -1,11 +1,12 @@
 #ifndef REFERENCEMONITOR_H
 #define REFERENCEMONITOR_H
 
-#include <subject.h>
-#include <instruction.h>
 #include <vector>
+#include "subject.h"
+#include "instruction.h"
 #include "security_levels.h"
 
+using namespace std;
 
 class ReferenceMonitor
 {

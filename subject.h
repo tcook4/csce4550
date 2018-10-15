@@ -1,8 +1,8 @@
 #ifndef SUBJECT_H
 #define SUBJECT_H
 
-#include <string>
 #include "object.h"
+#include <string>
 
 using namespace std;
 

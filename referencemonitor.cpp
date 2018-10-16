@@ -6,7 +6,7 @@ ReferenceMonitor::ReferenceMonitor()
 }
 
 // Add a subject to the vector of subjects
-void ReferenceMonitor::add_subject(Instruction inst, vector<Subject> &subjects)
+void ReferenceMonitor::addSubject(Instruction inst, vector<Subject> &subjects)
 {
     Subject temp(inst.getSubject_name(), inst.getSec_level());
     subjects.push_back(temp);
@@ -14,7 +14,7 @@ void ReferenceMonitor::add_subject(Instruction inst, vector<Subject> &subjects)
 }
 
 // Add an object to the vector of objects
-void ReferenceMonitor::add_object(Instruction inst, vector<Object> &objects)
+void ReferenceMonitor::addObject(Instruction inst, vector<Object> &objects)
 {
     Object temp(inst.getObject_name(), inst.getSec_level());
     objects.push_back(temp);
@@ -23,7 +23,7 @@ void ReferenceMonitor::add_object(Instruction inst, vector<Object> &objects)
 
 // Execute a read of an object
 // For BLPD, no read up is enforced - subject must be higher than object
-void ReferenceMonitor::execute_read(Instruction inst, vector<Subject> &subjects, vector<Object> &objects)
+void ReferenceMonitor::executeRead(Instruction inst, vector<Subject> &subjects, vector<Object> &objects)
 {
     // Storage for applicable objects
     Subject *sub = NULL;
@@ -69,7 +69,7 @@ void ReferenceMonitor::execute_read(Instruction inst, vector<Subject> &subjects,
 
 // Execute a write on an object
 // For BLPD, no write down is enforced
-void ReferenceMonitor::execute_write(Instruction inst, vector<Subject> &subjects, vector<Object> &objects)
+void ReferenceMonitor::executeWrite(Instruction inst, vector<Subject> &subjects, vector<Object> &objects)
 {
     // Storage for applicable objects
     Subject *sub = NULL;
@@ -118,25 +118,55 @@ void ReferenceMonitor::evaluate(Instruction command, vector<Subject> &subjects, 
     // Add a new subject
     if (command.getCommand() == "ADDSUB")
     {
-        add_subject(command, subjects);
+        addSubject(command, subjects);
     }
 
     // Add an object
     else if (command.getCommand() == "ADDOBJ")
     {
-        add_object(command, objects);
+        addObject(command, objects);
     }
 
     // Read an object
     else if (command.getCommand() == "READ")
     {
-        execute_read(command, subjects, objects);
+        executeRead(command, subjects, objects);
     }
 
     // Write to an object
     else if (command.getCommand() == "WRITE")
     {
-        execute_write(command, subjects, objects);
+        executeWrite(command, subjects, objects);
     }
 }
 
+// Print the stack of objects and subjects
+void ReferenceMonitor::printState(vector<Subject> &subjects, vector<Object> &objects, int final)
+{
+    // Check if this is our final output
+    if (final)
+    {
+        cout  << endl << "+" << string(4, '*') << "  Final State  " <<  string(4, '*') <<"+" << endl;
+    }
+    else
+    {
+        cout  << endl << "+" << string(4, '*') << " Current State " <<  string(4, '*') <<"+" << endl;
+    }
+
+    // Print the stack of subjects
+    cout << "|---Subject------Temp---|" << endl;
+    for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); it++)
+    {
+        cout << left << "| " << it->getName() << " | " << setw(14) ;
+        cout << right << setw(11) << it->getTemp() << " |" << endl;
+    }
+
+    // Print the stack of objects
+    cout << "|---Object------Value---|" << endl;
+    for (vector<Object>::iterator it = objects.begin(); it != objects.end(); it++)
+    {
+        cout << left << "| " << it->getName() << " | " << setw(14) ;
+        cout << right << setw(11) << it->getValue() << " |" << endl;
+    }
+    cout << "+" << string(23, '-') << "+" << endl << endl;
+}

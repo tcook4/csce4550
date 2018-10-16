@@ -8,14 +8,11 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <iomanip>
 #include "subject.h"
 #include "instruction.h"
 #include "referencemonitor.h"
 
 using namespace std;
-
-void print_status(vector<Subject> &subjects, vector<Object> &objects, int final);
 
 int main(int argc, char *argv[])
 {
@@ -56,7 +53,7 @@ int main(int argc, char *argv[])
         status_counter++;
         if (status_counter == 10)
         {
-            print_status(subjects, objects, 0);
+            monitor.printState(subjects, objects, 0);
             status_counter = 0;
         }
     }
@@ -65,38 +62,8 @@ int main(int argc, char *argv[])
     instructions.close();
 
     // Print final state before exiting
-    print_status(subjects, objects, 1);
+    monitor.printState(subjects, objects, 1);
 
     return 0;
 }
 
-// Print the stack of objects and subjects
-void print_status(vector<Subject> &subjects, vector<Object> &objects, int final)
-{
-    // Check if this is our final output
-    if (final)
-    {
-        cout  << "+" << string(4, '*') << "  Final State  " <<  string(4, '*') <<"+" << endl;
-    }
-    else
-    {
-        cout  << "+" << string(4, '*') << " Current State " <<  string(4, '*') <<"+" << endl;
-    }
-
-    // Print the stack of subjects
-    cout << "|---Subject------Temp---|" << endl;
-    for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); it++)
-    {
-        cout << left << "| " << it->getName() << " | " << setw(14) ;
-        cout << right << setw(11) << it->getTemp() << " |" << endl;
-    }
-
-    // Print the stack of objects
-    cout << "|---Object------Value---|" << endl;
-    for (vector<Object>::iterator it = objects.begin(); it != objects.end(); it++)
-    {
-        cout << left << "| " << it->getName() << " | " << setw(14) ;
-        cout << right << setw(11) << it->getValue() << " |" << endl;
-    }
-    cout << "+" << string(23, '-') << "+" << endl;
-}

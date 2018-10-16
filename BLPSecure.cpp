@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     // Verify we got a filename in command line arguments
     if (argc != 2)
     {
-        cout << "Error: please provide a filename in the syntax ./" << argv[0] << " filename\n";
+        cout << "Error: please provide a filename in the syntax ./" << argv[0] << " filename" << endl;
         return 1;
     }
 
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     instructions.open(argv[1], ifstream::in);
     if (!instructions)
     {
-        cout << "Error opening file";
+        cout << "Error opening file" << endl;
         return 1;
     }
 

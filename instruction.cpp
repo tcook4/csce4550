@@ -20,6 +20,7 @@ void Instruction::clear()
     value = 0;
 }
 
+// Parse and load an instruction object for use by the reference monitor
 bool Instruction::load(string commandStr)
 {
     stringstream ss; // Stringstream used to separate values
@@ -43,7 +44,7 @@ bool Instruction::load(string commandStr)
             // Verify security level valid and stream is empty
             if ((!(security_str == "LOW" || security_str == "MEDIUM" || security_str == "HIGH")) || (!ss.eof()))
             {
-                cout << "Bad Command: " << commandStr << endl;
+                cout << "Bad Instruction: " << commandStr << endl;
                 return false;
             }
 
@@ -53,7 +54,7 @@ bool Instruction::load(string commandStr)
         }
         else
         {
-            cout << "Bad Command: " << commandStr << endl;
+            cout << "Bad Instruction: " << commandStr << endl;
             return false;
         }
     }
@@ -68,7 +69,7 @@ bool Instruction::load(string commandStr)
             // Verify security level valid and stream is empty
             if ((!(security_str == "LOW" || security_str == "MEDIUM" || security_str == "HIGH")) || (!ss.eof()))
             {
-                cout << "Bad Command: " << commandStr << endl;
+                cout << "Bad Instruction: " << commandStr << endl;
                 return false;
             }
 
@@ -78,7 +79,7 @@ bool Instruction::load(string commandStr)
         }
         else
         {
-            cout << "Bad Command: " << commandStr << endl;
+            cout << "Bad Instruction: " << commandStr << endl;
             return false;
         }
     }
@@ -88,11 +89,10 @@ bool Instruction::load(string commandStr)
     {
         if (ss >> subject_name >> object_name)
         {
-
             // Make sure nothing left in stream
             if (!ss.eof())
             {
-                cout << "Bad Command: " << commandStr << endl;
+                cout << "Bad Instruction: " << commandStr << endl;
                 return false;
             }
 
@@ -102,7 +102,7 @@ bool Instruction::load(string commandStr)
         }
         else
         {
-            cout << "Bad Command: " << commandStr << endl;
+            cout << "Bad Instruction: " << commandStr << endl;
             return false;
         }
     }
@@ -115,7 +115,7 @@ bool Instruction::load(string commandStr)
             // Make sure nothing left in stream
             if (!ss.eof())
             {
-                cout << "Bad Command: " << commandStr << endl;
+                cout << "Bad Instruction: " << commandStr << endl;
                 return false;
             }
 
@@ -125,7 +125,7 @@ bool Instruction::load(string commandStr)
         }
         else
         {
-            cout << "Bad Command: " << commandStr << endl;
+            cout << "Bad Instruction: " << commandStr << endl;
             return false;
         }
     }
@@ -133,7 +133,7 @@ bool Instruction::load(string commandStr)
     // If we get here, we have a bad command name
     else
     {
-        cout << "Bad Command: " << commandStr << endl;
+        cout << "Bad Instruction: " << commandStr << endl;
         clear();
         return false;
     }

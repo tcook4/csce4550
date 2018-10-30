@@ -14,12 +14,7 @@ SUBDIRS += \
     Project1.pro
 
 DISTFILES += \
-    Project1.pro.user \
-    requirements \
-    outputCompare \
-    instructions \
-    instList \
-    expectedOutput
+    instList
 
 HEADERS += \
     subject.h \

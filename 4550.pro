@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    Bell-LaPadula-ACS
+    Bell-LaPadula-ACS \
+    Encryption-AES

@@ -10,17 +10,15 @@ class Object
 {
 public:
     Object();
-    Object(string str, security_level level);
+    Object(string str);
     void set_value(int val);
 
-    string getName() const;
-    int getValue() const;
-    security_level getSec_level() const;
+    string getName() const; // Simple getter for reference monitor usage
+    int getValue() const;   // Simple getter for reference monitor usage
 
 private:
-    string name;
-    int value;
-    security_level sec_level;
+    string name; // Name of the object
+    int value;   // Value heald by the object
 };
 
 #endif // OBJECT_H

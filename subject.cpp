@@ -4,14 +4,12 @@ Subject::Subject()
 {
     name = "";
     temp = 0;
-    sec_level = UNAUTHENTICATED;
 }
 
-Subject::Subject(string str, security_level level)
+Subject::Subject(string str)
 {
     name = str;
     temp = 0;
-    sec_level = level;
 }
 
 void Subject::READ(Object &obj)
@@ -32,10 +30,5 @@ string Subject::getName() const
 int Subject::getTemp() const
 {
     return temp;
-}
-
-security_level Subject::getSec_level() const
-{
-    return sec_level;
 }
 

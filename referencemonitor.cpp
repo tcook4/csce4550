@@ -8,16 +8,29 @@ ReferenceMonitor::ReferenceMonitor()
 // Add a subject to the vector of subjects
 void ReferenceMonitor::addSubject(Instruction inst, vector<Subject> &subjects)
 {
-    Subject temp(inst.getSubject_name(), inst.getSec_level());
+    // Create and push back the subject
+    Subject temp(inst.getSubject_name());
     subjects.push_back(temp);
+
+    // Get the index of our newly pushed subject
+    Subject vecptr;
+    vecptr = subjects.at(subjects.size()-1);
+
+    // Add the mapping of subject to security level
+    subject_levels.insert({&temp, inst.getSec_level()});
+
     cout << "Subject Added : " << inst.getCommand_ref() << endl;
 }
 
 // Add an object to the vector of objects
 void ReferenceMonitor::addObject(Instruction inst, vector<Object> &objects)
 {
-    Object temp(inst.getObject_name(), inst.getSec_level());
+    Object temp(inst.getObject_name());
     objects.push_back(temp);
+
+    // Add mapping of object to security level
+    object_levels.insert({&temp, inst.getSec_level()});
+
     cout << "Object Added : " << inst.getCommand_ref() << endl;
 }
 
@@ -28,6 +41,9 @@ void ReferenceMonitor::executeRead(Instruction inst, vector<Subject> &subjects, 
     // Storage for applicable objects
     Subject *sub = NULL;
     Object *obj = NULL;
+    security_level sub_level, obj_level;
+    map<Object*, security_level>::iterator obj_iter;
+    map<Subject*, security_level>::iterator sub_iter;
 
     // Find the subject and object of the operation
     for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); ++it)
@@ -54,7 +70,25 @@ void ReferenceMonitor::executeRead(Instruction inst, vector<Subject> &subjects, 
         return;
     }
 
-    // Determine if our security level allows us to read the object
+    // Look up our security levels from our map
+    obj_iter = object_levels.find(obj);
+    if (obj_iter != object_levels.end())
+    {
+        cout << "Found object!!\n";
+    }
+    else
+    {
+        cout << "Didn't work" << endl;
+        cout << "trying to find " << sub << obj << endl;
+    }
+    sub_iter = subject_levels.find(sub);
+    if (sub_iter != subject_levels.end())
+    {
+        cout << "Found subject\n";
+    }
+
+
+    /*  // Determine if our security level allows us to read the object
     if (sub->getSec_level() >= obj->getSec_level())
     {
         sub->READ(*obj);
@@ -64,7 +98,7 @@ void ReferenceMonitor::executeRead(Instruction inst, vector<Subject> &subjects, 
     {
         cout << "Access Denied : " << inst.getCommand_ref() << endl;
 
-    }
+    }*/
 }
 
 // Execute a write on an object
@@ -74,6 +108,10 @@ void ReferenceMonitor::executeWrite(Instruction inst, vector<Subject> &subjects,
     // Storage for applicable objects
     Subject *sub = NULL;
     Object *obj = NULL;
+    security_level sub_level, obj_level;
+    map<Object*, security_level>::iterator obj_iter;
+    map<Subject*, security_level>::iterator sub_iter;
+
 
     // Find the subject and object of the operation
     for (vector<Subject>::iterator it = subjects.begin(); it != subjects.end(); ++it)
@@ -100,6 +138,30 @@ void ReferenceMonitor::executeWrite(Instruction inst, vector<Subject> &subjects,
         return;
     }
 
+
+    // Look up our security levels from our map
+    obj_iter = object_levels.find(obj);
+    if (obj_iter != object_levels.end())
+    {
+        cout << "Found object!!\n";
+        obj_level = obj_iter->second;
+    }
+    else
+    {
+        cout << "Didnt work\n";
+    }
+    sub_iter = subject_levels.find(sub);
+    if (sub_iter != subject_levels.end())
+    {
+        cout << "Found subject\n";
+        sub_level = sub_iter->second;
+    }
+    else
+    {
+        cout << "Didnt work\n";
+    }
+
+/*
     // Determine if our security level allows us to write to the object
     if (sub->getSec_level() <= obj->getSec_level())
     {
@@ -109,7 +171,7 @@ void ReferenceMonitor::executeWrite(Instruction inst, vector<Subject> &subjects,
     else
     {
         cout << "Access Denied : " << inst.getCommand_ref() << endl;
-    }
+    } */
 }
 
 // Evaluate and perform the operation in an instruction object
